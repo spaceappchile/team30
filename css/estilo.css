@@ -111,6 +111,12 @@ section.principal, aside{
 	vertical-align: top;
 	width: 100%;
 }
+section.principal img{
+	border: 1em solid #3C3C3C;
+	border-radius: 10px;
+	width: 260px;
+	height: 150px;
+}
 #FromLogin{
 	height: 130px;
 	text-align: center;
@@ -125,7 +131,7 @@ section.principal, aside{
 .filaPost{
 	margin: 10px 0 10px 0;
 	display: inline-block;
-	width: 70%;
+	
 }
 .fila label{
 	display: inline-block;	
@@ -136,7 +142,12 @@ section.principal, aside{
 	width: 70%;
 	border-radius: 2px;
 	height: 20px;
-
+}
+.filaPost input{
+	display: inline-block;	
+	margin: 0 5px 0 0;
+	border-radius: 2px;
+	height: 25px;
 }
 .botonLogin{
 	background: url("../img/bluestock.jpg");
@@ -144,9 +155,6 @@ section.principal, aside{
 	text-align: center;
 	height: 25px;
 	padding: 8px 0 0 0 ;
-	
-
-
 }
 
 .btnPost{
@@ -156,7 +164,7 @@ section.principal, aside{
 	text-align: center;
 	height: 25px;
 	padding: 8px 0 0 0 ;
-	width: 30%;
+	width: 40%;
 	
 
 
