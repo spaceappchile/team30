@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="swfobject.js"></script>
+    <script type="text/javascript" src="amvideo.js"></script>
+    <script type="text/javascript">
+    AMVideo.input.stream = "peer3";
+    AMVideo.input.container = "peer3ContainerId";
+    AMVideo.output.peers = [ { stream : "peer1", container : "peer1ContainerId"}, 
+                             { stream : "peer2", container : "peer2ContainerId"}];
+    </script>
+</head>
+<body>
+    <div id="peer1ContainerId"></div>
+    <div id="peer2ContainerId"></div>
+    <div id="peer3ContainerId"></div>
+    <script type="text/javascript">AMVideo.createInputSWF();</script>
+</body>
+</html>

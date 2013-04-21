@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx" 
+               applicationComplete="main()">
+    <fx:Script>
+        <![CDATA[
+            import com.arpameeting.utils.AdobeDeveloperData;
+            import com.arpameeting.utils.Log;
+            
+            import flash.external.ExternalInterface;
+            
+            import mx.collections.ArrayList;
+            import mx.controls.Alert;
+            import mx.core.FlexGlobals;
+            
+            [Bindable] private var _connected:Boolean = false;
+            [Bindable] private var _publishing:Boolean = false;
+            [Bindable] private var _group_name:String = "com.arpameeting.";
+            [Bindable] private var _stream_name:String;
+            [Bindable] private var _user_tag:String;
+            
+            private var _groupSpecifier:GroupSpecifier;
+            private var _netConnection:NetConnection;
+            private var _outgoingStream:NetStream;
+            private var _netGroup:NetGroup;
+            
+            [Bindable] private var _cameras:ArrayList = new ArrayList(Camera.names);
+            private var _camera:Camera = null;
+            
+            private var _quality:Number = 50;
+            private var _bw:Number = 0;
+            private var _fps:Number = 10;
+            private var _wCapture:Number = 320;
+            private var _hCapture:Number = 240;
+            
+            [Bindable] private var _microphones:ArrayList = new ArrayList(Microphone.names);
+            private var _microphone:Microphone = null;
+            
+            private var _auto_publish:Boolean;
+            
+            private function setupCamera():void
+            {
+                _camera = Camera.getCamera(camerasBox.selectedIndex.toString());
+                _camera.setMode(_wCapture, _hCapture, _fps, false);
+                _camera.setQuality(_bw, _quality);
+                _camera.setLoopback(true);
+            }
+            
+            private function setupMicrophone():void
+            {
+                _microphone = Microphone.getMicrophone(micsBox.selectedIndex);
+                _microphone.setUseEchoSuppression(true);
+                _microphone.gain = micVolume.value;
+                _microphone.codec = SoundCodec.SPEEX;
+            }
+            
+            private function publish():void
+            {
+                _outgoingStream = new NetStream(_netConnection, 
+                    _groupSpecifier.groupspecWithAuthorizations());
+                _outgoingStream.addEventListener(NetStatusEvent.NET_STATUS, 
+                    onNetStatus);
+                setupCamera();
+                _outgoingStream.attachCamera(_camera);
+                
+                if (micCheckBox.selected)
+                {
+                    setupMicrophone();
+                    _outgoingStream.attachAudio(_microphone);
+                }
+                
+                _outgoingStream.publish(_stream_name);
+                var video:Video = new Video(outgoingVideoDisplay.width, 
+                    outgoingVideoDisplay.height);
+                video.attachCamera(_camera);
+                video.smoothing = true;
+                video.scaleX = -1;
+                video.x = video.x + video.width;
+                outgoingVideoDisplay.addChild(video);
+                _publishing = true;
+                startButton.enabled = false;
+            }
+            
+            private function play(stream:String):void
+            {
+                if (ExternalInterface.available)
+                {
+                    var wrapperFunction:String = "AMVideo.newIncomingStream";
+                    Log.d("Calling to " + wrapperFunction + "('" + stream + "')");
+                    ExternalInterface.call(wrapperFunction, stream);
+                }
+                else
+                {
+                    Log.d("ExternalInterface not available");
+                    Alert.show("ExternalInterface not available");
+                }
+            }
+            
+            public function stop():void 
+            {
+                _outgoingStream.close();
+                outgoingVideoDisplay.removeChildAt(1);
+                _publishing = false;
+                startButton.enabled = true;
+            }
+            
+            public function stoped(stream:String):void
+            {
+                // TODO Use External interface
+            }
+            
+            private function onConnect():void
+            {
+                _netGroup = new NetGroup(_netConnection, 
+                    _groupSpecifier.groupspecWithAuthorizations());
+                _netGroup.addEventListener(NetStatusEvent.NET_STATUS, 
+                    onNetStatus);
+            }
+            
+            /**
+             * --- Net Handler ---
+             */
+            private function onNetStatus(event:NetStatusEvent):void
+            {
+                Log.d(event.info.code);
+                switch (event.info.code)
+                {
+                    case "NetConnection.Connect.Success":
+                        onConnect();
+                        break;
+                    case "NetGroup.Connect.Success":
+                        break;
+                    case "NetGroup.Neighbor.Connect":
+                        _connected = true;
+                        if (_auto_publish)
+                        {
+                            publish();
+                        }
+                        break;
+                    case "NetGroup.MulticastStream.PublishNotify":
+                        Log.d(event.info.name + " stream detected!");
+                        play(event.info.name);
+                        break;
+                    case "NetGroup.MulticastStream.UnpublishNotify":
+                        Log.d(event.info.name + " stream stoped!");
+                        stoped(event.info.name);
+                        break;
+                    case "NetGroup.Posting.Notify":
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            /**
+             * --- MAIN FUNCTION ---
+             */
+            private function main():void
+            {
+                /**
+                 * Running if "_group_name" is setted.
+                 */
+                if (FlexGlobals.topLevelApplication.parameters.group == null || 
+                    FlexGlobals.topLevelApplication.parameters.stream == null)
+                {
+                    return;
+                }
+                
+                /**
+                 * Quality vars.
+                 */
+                if (FlexGlobals.topLevelApplication.parameters.quality != null)
+                {
+                    _quality = FlexGlobals.topLevelApplication.parameters.quality;
+                }
+                if (FlexGlobals.topLevelApplication.parameters.bw != null)
+                {
+                    _bw = FlexGlobals.topLevelApplication.parameters.bw;
+                }
+                if (FlexGlobals.topLevelApplication.parameters.fps != null)
+                {
+                    _fps = FlexGlobals.topLevelApplication.parameters.fps;
+                }
+                if (FlexGlobals.topLevelApplication.parameters.wCapture != null)
+                {
+                    _wCapture = FlexGlobals.topLevelApplication.parameters.wCapture;
+                }
+                if (FlexGlobals.topLevelApplication.parameters.hCapture != null)
+                {
+                    _hCapture = FlexGlobals.topLevelApplication.parameters.hCapture;
+                }
+                
+                /**
+                 * Get varaibles from flashVars.
+                 */
+                _group_name = _group_name + 
+                    FlexGlobals.topLevelApplication.parameters.group;
+                _stream_name = 
+                    FlexGlobals.topLevelApplication.parameters.stream;
+                if (FlexGlobals.topLevelApplication.parameters.autopublish && 
+                    FlexGlobals.topLevelApplication.parameters.autopublish == "true")
+                    _auto_publish = true;
+                else
+                    _auto_publish = false;
+                _user_tag = "user" + int(Math.random() * 65536);
+                Log.tag = _user_tag;
+
+                /**
+                 * GroupSpecifier.
+                 */
+                _groupSpecifier = new GroupSpecifier(_group_name);
+                _groupSpecifier.multicastEnabled = true;
+                _groupSpecifier.serverChannelEnabled = true;
+                _groupSpecifier.postingEnabled = true;
+                //_groupSpecifier.routingEnabled = true;
+                //_groupSpecifier.objectReplicationEnabled = true;
+                //_groupSpecifier.ipMulticastMemberUpdatesEnabled = true;
+                //_groupSpecifier.peerToPeerDisabled = true;
+
+                /**
+                 * Connecting.
+                 */
+                _netConnection = new NetConnection();
+                _netConnection.addEventListener(NetStatusEvent.NET_STATUS, 
+                    onNetStatus);
+                _netConnection.connect(AdobeDeveloperData.SERVER + "/" + 
+                    AdobeDeveloperData.DEVKEY);
+
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <!-- Place non-visual elements (e.g., services, value objects) here -->
+    </fx:Declarations>
+    <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+        @namespace mx "library://ns.adobe.com/flex/mx";
+        .controlsStyle {
+            backgroundColor: #5f7ab3;
+            color: #ffffff;
+            bottom: 0;
+            left: 0;
+            borderVisible: false;
+            horizontal-align: center;
+            vertical-align: middle;
+        }
+        s|ComboBox {
+            color: #000000;
+        }
+    </fx:Style>
+    <s:BorderContainer width="100%" height="100%" >
+        <s:VideoDisplay id="outgoingVideoDisplay" width="100%" height="100%" />
+        <s:BorderContainer id="controlsContainer" 
+                           styleName="controlsStyle" 
+                           width="100%"
+                           visible="{!_publishing}">
+            <s:VGroup width="100%" verticalAlign="middle" horizontalAlign="center" paddingTop="10">
+                <s:HGroup verticalAlign="middle">
+                    <s:Label text="Select webcam: " />
+                    <s:ComboBox id="camerasBox" dataProvider="{_cameras}" selectedIndex="0" />
+                </s:HGroup>
+                <s:CheckBox id="micCheckBox" label="Enable microphone" />
+                <s:HGroup verticalAlign="middle">
+                    <s:ComboBox id="micsBox" dataProvider="{_microphones}" 
+                                selectedIndex="0" 
+                                enabled="{micCheckBox.selected}"/>
+                    <s:Label text="Volume" />
+                    <s:HSlider id="micVolume" minimum="0" maximum="100" value="50"
+                               enabled="{micCheckBox.selected}"/>
+                </s:HGroup>
+            </s:VGroup>
+        </s:BorderContainer>
+        <s:VGroup width="100%" top="10" left="50%" horizontalAlign="center">
+            <s:HGroup verticalAlign="middle" horizontalAlign="center" width="100%" top="10" left="50%">
+                <s:Button id="startButton" label="Start" click="publish()" 
+                          enabled="{_connected}" alpha="0.75"/>
+                <s:Button label="Stop" click="stop()" enabled="{_publishing}" alpha="0.75"/>
+            </s:HGroup>
+            <s:Label text="Waiting for other peers..." visible="{!_connected}" paddingTop="30" />
+        </s:VGroup>
+    </s:BorderContainer>
+</s:Application>

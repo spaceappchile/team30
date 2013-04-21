@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="es-CL">
+<head>
+	<meta charset ="UTF-8"/>
+	<meta name="description" content=" Bienvenido al nuevo sistema de aplicaciones"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	
+	<title> Soluciones TI</title>
+	<link rel="stylesheet" type="text/css" href="css/estilo.css"/>
+	<link rel="author" type="text/plain" href="humans.txt"/>
+	<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
+	<script>
+  $(function() {
+     $( "#accordion" ).accordion({
+    	collapsible : true
+    });
+     $('.cerraracc').trigger('click');
+    $("#menuPrincipal").hide();
+    $("#menu").click(function(){
+    	if ($("#menuPrincipal").is (':hidden'))
+    	{
+    		$("#menuPrincipal").fadeIn(1000);
+    	}else
+    	{
+    		$("#menuPrincipal").fadeOut(1000);
+    	}
+
+    });
+  });
+  </script>
+</head>
+<body>
+	<header>
+		<h1>
+			<a href="index.html">
+				<img class="fade" alt="Ingenio Lab" src="img/wan_updated_optimized.png"/>
+			</a>
+		</h1>
+		<div id="menu">Mi Menu >> Mi Plan</div>
+		<nav id="menuPrincipal">
+		<ul>
+			<li>
+				<a href="planes.html">Mi Plan</a>
+			</li>
+			<li>
+				<a href="">Reuniones</a>
+			</li>
+			<li>
+				<a href="">Informaci&oacute;n</a>
+			</li>
+			<li>
+				<a href="">Contacto</a>
+			</li>
+			<li>
+				<a href="">Noticias del sitio</a>
+			</li>
+		</ul>
+	</nav>
+	</header>
+	<section id="contenido">
+		<h1>Plan : Earth and Space Science Explorers Poster </h1>
+		<section class="principal">
+			
+			<nav id="accordion">
+				<h3 class="cerraracc">NASA: Your Future and Ours Poster</h3>
+				<div>
+					<ul>
+						<li><a href="contenido.html">Unidad 1</a></li>
+						<li><a href="contenido.html">Unidad 2</a></li>
+						<li><a href="contenido.html">Unidad 3</a></li>
+						<li><a href="contenido.html">Unidad 4</a></li>
+						<li><a href="repositorio.html">Descargar Material</a></li>
+					</ul>
+				</div>
+				<h3>Aeronautics Research Poster</h3>
+				<div>
+					<ul>
+						<li><a href="contenido.html">Unidad 1</a></li>
+						<li><a href="contenido.html">Unidad 2</a></li>
+						<li><a href="contenido.html">Unidad 3</a></li>
+						<li><a href="contenido.html">Unidad 4</a></li>
+						<li><a href="repositorio.html">Descargar Material</a></li>
+					</ul>
+				</div>
+				<h3>Aerospace Design Poster</h3>
+				<div>
+					<ul>
+						<li><a href="contenido.html">Unidad 1</a></li>
+						<li><a href="contenido.html">Unidad 2</a></li>
+						<li><a href="contenido.html">Unidad 3</a></li>
+						<li><a href="contenido.html">Unidad 4</a></li>
+						<li><a href="repositorio.html">Descargar Material</a></li>
+					</ul>
+				</div>
+			</nav>
+		</section>
+		<section class="principal">
+			<h3>Ingresa tu comentario</h3>
+			<p class="filaPost"><input type="text"/> <a href="planes.html"><div class="btnPost">Post</div></a></p>
+			
+		</section>
+		<section class="principal">
+			<h3>STATUS</h3>
+			<p><strong>Mi Mentor: </strong><label> Carlos Castro</label></p>
+			<p><strong>Avance: </strong><label> 90 %</label></p>
+			<p><strong>Reuniones: </strong><label> 20</label></p>
+		</section>
+		
+	</section>
+	<footer>
+		Soluciones TI con @TecnologiaWeb
+	</footer>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html lang="es-CL">
+<head>
+	<meta charset ="UTF-8"/>
+	<meta name="description" content=" Bienvenido al nuevo sistema de aplicaciones"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	
+	<title> Soluciones TI</title>
+	<link rel="stylesheet" type="text/css" href="css/estilo.css"/>
+	<link rel="author" type="text/plain" href="humans.txt"/>
+	<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
+	<script>
+  $(function() {
+   $( "#accordion" ).accordion({
+    	collapsible : true
+    });
+     $('.cerraracc').trigger('click');
+    $("#menuPrincipal").hide();
+    $("#menu").click(function(){
+    	if ($("#menuPrincipal").is (':hidden'))
+    	{
+    		$("#menuPrincipal").fadeIn(1000);
+    	}else
+    	{
+    		$("#menuPrincipal").fadeOut(1000);
+    	}
+
+    });
+  });
+  </script>
+</head>
+<body>
+	<header>
+		<h1>
+			<a href="index.html">
+				<img class="fade" alt="Ingenio Lab" src="img/wan_updated_optimized.png"/>
+			</a>
+		</h1>
+		<div id="menu">Mi Menu</div>
+		<nav id="menuPrincipal">
+		<ul>
+			<li>
+				<a href="planes.html">Mi Plan</a>
+			</li>
+			<li>
+				<a href="">Reuniones</a>
+			</li>
+			<li>
+				<a href="">Informaci&oacute;n</a>
+			</li>
+			<li>
+				<a href="">Contacto</a>
+			</li>
+			<li>
+				<a href="">Noticias del sitio</a>
+			</li>
+		</ul>
+	</nav>
+	</header>
+	<section id="contenido">
+		<h1>Contenido: Unidad 1</h1>
+		<section class="principal">		
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam cursus. Morbi ut mi. Nullam enim leo, 
+		egestas id, condimentum at, laoreet mattis, massa. Sed eleifend nonummy diam. Praesent mauris ante, 
+		elementum et, bibendum at, posuere sit amet, nibh. Duis tincidunt lectus quis dui viverra vestibulum. 
+		Suspendisse vulputate aliquam dui. Nulla elementum dui ut augue. Aliquam vehicula mi at mauris. Maecenas placerat, 
+		nisl at consequat rhoncus, sem nunc gravida justo, quis eleifend arcu velit quis lacus. Morbi magna magna, 
+		tincidunt a, mattis non, imperdiet vitae, tellus. Sed odio est, auctor ac, sollicitudin in, consequat vitae, 
+		orci. Fusce id felis. Vivamus sollicitudin metus eget eros.Pellentesque habitant morbi tristique senectus 
+		et netus et malesuada fames ac turpis egestas. In posuere felis nec tortor. Pellentesque faucibus. 
+		Ut accumsan ultricies elit. Maecenas at justo id velit placerat molestie. Donec dictum lectus non odio. 
+		Cras a ante vitae enim iaculis aliquam. Mauris nunc quam, venenatis nec, euismod sit amet, egestas placerat, est. 
+		Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras id elit. 
+		Integer quis urna. Ut ante enim, dapibus malesuada, fringilla eu, condimentum quis, tellus. Aenean porttitor 
+		eros vel dolor. Donec convallis pede venenatis nibh. Duis quam. Nam eget lacus. Aliquam erat volutpat. 
+		Quisque dignissim congue leo.</p>
+		</section>
+		
+	</section>
+	<footer>
+		Soluciones TI con @TecnologiaWeb
+	</footer>
+</body>
+</html>
